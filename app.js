@@ -15,6 +15,8 @@ const partnerRouter = require('./routes/partnerRouter');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
+const passport = require('passport');
+const authenticate = require('./authenticate');
 
 const url = 'mongodb://127.0.0.1:27017/nucampsite';
 const connect = mongoose.connect(url, {
@@ -27,7 +29,10 @@ const connect = mongoose.connect(url, {
 connect.then(() => console.log('Connected correctly to server'), 
     err => console.log(err)
 );
-// app.use(cookieParser('12345-67890-09876-54321'));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(session({
     name: 'session-id',
     secret: '12345-67890-09876-54321',
@@ -36,22 +41,15 @@ app.use(session({
     store: new FileStore()
 }));
 
-
 function auth(req, res, next) {
-    console.log(req.session);
+    console.log(req.user);
 
-    if (!req.session.user) {
-        const err = new Error('You are not authenticated!');
+    if (!req.user) {
+        const err = new Error('You are not authenticated!');                    
         err.status = 401;
         return next(err);
     } else {
-        if (req.session.user === 'authenticated') {
-            return next();
-        } else {
-            const err = new Error('You are not authenticated!');
-            err.status = 401;
-            return next(err);
-        }
+        return next();
     }
 }
 
