@@ -18,6 +18,12 @@ npm install mongoose@5.10.9 mongoose-currency@0.2.0 --legacy-peer-deps
 - failed use --force
 
 ```sh
+npm install passport-jwt@4.0.0 jsonwebtoken@8.5.1 --force
+```
+
+- failed use --force
+
+```sh
 npm install passport@0.4.1 passport-local@1.0.0 passport-local-mongoose@6.0.1 --force
 ```
 
