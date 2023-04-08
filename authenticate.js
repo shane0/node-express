@@ -33,8 +33,24 @@ exports.jwtPassport = passport.use(
     )
 );
 
-exports.verifyUser = passport.authenticate('jwt', {session: false});
+function verifyAdmin(req, res, next){
+        console.log(req.user.admin);
+    
+        if (!req.user) {
+            const err = new Error(`${req.user.username} is admin = ${req.user.admin}`);                    
+            // const err = new Error(`You are not authorized to perform this operation!`);                    
+            err.status = 403;
+            return next(err);
+        } else {
+            return next();
+        }
+}
+
+
 
 exports.local = passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+exports.verifyAdmin = verifyAdmin
+exports.verifyUser = passport.authenticate('jwt', {session: false});
