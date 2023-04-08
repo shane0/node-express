@@ -7,6 +7,10 @@ const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 const config = require('./config.js');
 
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+exports.local = passport.use(new LocalStrategy(User.authenticate()));
+
 exports.getToken = function(user) {
     return jwt.sign(user, config.secretKey, {expiresIn: 3600});
 };
@@ -33,24 +37,20 @@ exports.jwtPassport = passport.use(
     )
 );
 
-function verifyAdmin(req, res, next){
-        console.log(req.user.admin);
-    
-        if (!req.user) {
-            const err = new Error(`${req.user.username} is admin = ${req.user.admin}`);                    
-            // const err = new Error(`You are not authorized to perform this operation!`);                    
-            err.status = 403;
-            return next(err);
-        } else {
-            return next();
-        }
-}
-
-
-
-exports.local = passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
-
-exports.verifyAdmin = verifyAdmin
 exports.verifyUser = passport.authenticate('jwt', {session: false});
+
+
+// function verifyAdmin(req, res, next){
+//         console.log(req.user.admin);
+    
+//         if (!req.user) {
+//             const err = new Error(`${req.user.username} is admin = ${req.user.admin}`);                    
+//             // const err = new Error(`You are not authorized to perform this operation!`);                    
+//             err.status = 403;
+//             return next(err);
+//         } else {
+//             return next();
+//         }
+// }
+
+// exports.verifyAdmin = verifyAdmin
