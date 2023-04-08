@@ -7,7 +7,7 @@ const router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    res.send('respond with a resource');
+    res.send(`${res.user} respond with a resource`);
 });
 
 router.post('/login', passport.authenticate('local'), (req, res) => {
@@ -28,6 +28,7 @@ router.post('/signup', (req, res) => {
                 res.json({err: err});
             } else {
                 if (req.body.firstname) {
+                    console.log(req.body.firstname)
                     user.firstname = req.body.firstname;
                 }
                 if (req.body.lastname) {
